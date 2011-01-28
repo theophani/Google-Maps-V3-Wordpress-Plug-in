@@ -17,10 +17,12 @@ add_action('wp_head', 'include_gmaps_in_header');
 // Main function to generate google map
 function include_google_v3_map($attr) {
 
+  $path_to_plugin = WP_PLUGIN_URL.'/'.str_replace(basename( __FILE__),"",plugin_basename(__FILE__));
+
   // Default attributes
-  $attr = shortcode_atts(
+  extract(shortcode_atts(
             array(  
-                'zoom' => '14',
+                'zoom' => 14,
                 'width' => '500',
                 'height' => '300',
                 'mapcanvasid' => 'map_canvas',
@@ -28,21 +30,21 @@ function include_google_v3_map($attr) {
                 'maptype' => 'ROADMAP',
                 'containerid' => 'map_details',
                 'location' => '',
-                'disabledefaultui' => 'true'          
-              ), $attr);
+                'disabledefaultui' => 'true'
+              ), $attr));
 
   $options = array(  
-                'zoom' => '14',
+                'zoom' =>  (int) $zoom,
                 'mapCanvasId' => $mapcanvasid,
                 'mapLinkId' => $maplinkid,
                 'mapType' => $maptype,
                 'location' => $location,
-                'disableDefaultUI' => $disabledefaultui
+                'disableDefaultUI' => ($disabledefaultui == 'true' ? true : false )
               );
 
-  $output = '  
+  $output = '
   <div id="'.$containerid.'">
-    <div id="'.$mapcanvasid.'" style="width:'.$width.'; height:'.$height.';"></div>
+    <div id="'.$mapcanvasid.'" style="width:'.$width.'px; height:'.$height.'px;"></div>
     <p> 
       <a id="'.$maplinkid.'" target="_blank">Open map in Google</a> 
     </p>
