@@ -14,15 +14,17 @@
   // Uses Google Maps JavaScript API V3
   // http://code.google.com/apis/maps/documentation/javascript/
   
-  if ( window.show_google_v3_map === undefined ) {
+  if ( window.include_google_v3_map === undefined ) {
     
-    window.show_google_v3_map = function (options) {
+    window.include_google_v3_map = function (options) {
       // Can pass either an object, or just the location as a string
       var location = options.location || options || alert('No location provided for map');
       var zoom = options.zoom || 14;
       var disableDefaultUI = (options.disableDefaultUI === false ? false : true);
       var mapType = options.mapType || 'HYBRID'; // other: SATELLITE, ROADMAP, TERRAIN
       var mapTypeId = google.maps.MapTypeId[mapType];
+      var mapCanvasId = options.mapCanvasId || 'map_canvas';
+      var mapLinkId = options.mapLinkId || 'map_link';
   
       var renderMap = function (latlng) {
         var mapOptions = {
@@ -32,7 +34,7 @@
               mapTypeId : mapTypeId
             };
         // renders the map to "map_canvas"
-        var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+        var map = new google.maps.Map(document.getElementById(mapCanvasId), mapOptions);
       };
       
       var geocoder = new google.maps.Geocoder();
@@ -45,7 +47,7 @@
       });
   
       var uri = 'http://maps.google.com/maps?q=' + location;
-      document.getElementById('map_link').href = uri;
+      document.getElementById(mapLinkId).href = uri;
     };
   
   }
