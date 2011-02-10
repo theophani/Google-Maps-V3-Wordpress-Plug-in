@@ -16,6 +16,9 @@ add_action('wp_head', 'include_gmaps_in_header');
 
 // Main function to generate google map
 function include_google_v3_map($attr) {
+  
+  static $instance = 0;
+  $instance++;
 
   $path_to_plugin = WP_PLUGIN_URL.'/'.str_replace(basename( __FILE__),"",plugin_basename(__FILE__));
 
@@ -23,15 +26,22 @@ function include_google_v3_map($attr) {
   extract(shortcode_atts(
             array(  
                 'zoom' => 14,
-                'width' => '500',
-                'height' => '300',
+                'width' => '500px',
+                'height' => '300px',
                 'mapcanvasid' => 'map_canvas',
                 'maplinkid' => 'map_link',
                 'maptype' => 'ROADMAP',
                 'containerid' => 'map_details',
                 'location' => '',
-                'disabledefaultui' => 'true'
+                'disabledefaultui' => 'true',
+                'linktext' => 'Open map in Google'
               ), $attr));
+
+  if ($instance > 1) {
+    $containerid .= '-'.$instance;
+    $mapcanvasid .= '-'.$instance;
+    $maplinkid   .= '-'.$instance;
+  }
 
   $options = array(  
                 'zoom' =>  (int) $zoom,
@@ -43,10 +53,10 @@ function include_google_v3_map($attr) {
               );
 
   $output = '
-  <div id="'.$containerid.'">
-    <div id="'.$mapcanvasid.'" style="width:'.$width.'px; height:'.$height.'px;"></div>
-    <p> 
-      <a id="'.$maplinkid.'" target="_blank">Open map in Google</a> 
+  <div id="'.$containerid.'" class="map_details">
+    <div id="'.$mapcanvasid.'" class="map_canvas" style="width:'.$width.'; height:'.$height.';"></div>
+    <p>
+      <a id="'.$maplinkid.'" class="map_link" target="_blank">'.$linktext.'</a>
     </p>
   </div>
   <script src="'.$path_to_plugin.'script.js"></script>
